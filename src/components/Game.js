@@ -1,24 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/GameProfessional.css';
 import NumPad from './NumPad';
 import Notification from './Notification';
+import GameSetup from './GameSetup';
+import MatchReport from './MatchReport';
+import CheckoutHint from './CheckoutHint';
+import { shouldShowCheckoutHint } from '../utils/checkoutData';
 
 const Game = () => {
   const navigate = useNavigate();
+  const isMountedRef = useRef(true);
+  const [gameType, setGameType] = useState(501);
+  const [bestOf, setBestOf] = useState(3);
   const [players, setPlayers] = useState([
-    { id: 1, name: 'Player 1', score: 501, throws: [], legs: 0, allThrows: [] },
-    { id: 2, name: 'Player 2', score: 501, throws: [], legs: 0, allThrows: [] },
+    {
+      id: 1,
+      name: 'Player 1',
+      score: 501,
+      throws: [],
+      legs: 0,
+      allThrows: [],
+    },
+    {
+      id: 2,
+      name: 'Player 2',
+      score: 501,
+      throws: [],
+      legs: 0,
+      allThrows: [],
+    },
   ]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [currentThrow, setCurrentThrow] = useState('');
+  const [turnStartScores, setTurnStartScores] = useState([501, 501]);
   const [gameStarted, setGameStarted] = useState(false);
-  const [bestOf, setBestOf] = useState(3);
+  const [matchCompleted, setMatchCompleted] = useState(false);
+  const [matchWinner, setMatchWinner] = useState(null);
   const [notification, setNotification] = useState({
     message: '',
     type: 'info',
     isVisible: false,
   });
+
+  // Cleanup effect to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const showNotification = (message, type = 'info', duration = 3000) => {
     setNotification({
@@ -26,6 +56,14 @@ const Game = () => {
       type,
       isVisible: true,
     });
+  };
+
+  const handleStartGame = (gameConfig) => {
+    setGameType(gameConfig.gameType);
+    setBestOf(gameConfig.bestOf);
+    setPlayers(gameConfig.players);
+    setTurnStartScores([gameConfig.gameType, gameConfig.gameType]);
+    setGameStarted(true);
   };
 
   const hideNotification = () => {
@@ -93,25 +131,30 @@ const Game = () => {
 
         if (winner.legs >= legsToWin) {
           setTimeout(() => {
+            if (!isMountedRef.current) return;
+            setMatchWinner(winner);
+            setMatchCompleted(true);
             showNotification(
               `${winner.name} wins the match ${winner.legs}-${
                 updatedPlayers[1 - currentPlayer].legs
               }!`,
               'trophy',
-              5000
+              3000
             );
           }, 100);
         } else {
           // Reset for next leg
           setTimeout(() => {
+            if (!isMountedRef.current) return;
             showNotification(`${winner.name} wins the leg!`, 'success', 2000);
             setPlayers((prevPlayers) =>
               prevPlayers.map((p) => ({
                 ...p,
-                score: 501,
+                score: gameType,
                 throws: [],
               }))
             );
+            setTurnStartScores([gameType, gameType]);
             setCurrentThrow('');
           }, 100);
         }
@@ -122,8 +165,8 @@ const Game = () => {
     }
 
     // Valid throw - use functional update to only update the current player
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((player, index) => {
+    setPlayers((prevPlayers) => {
+      const updatedPlayers = prevPlayers.map((player, index) => {
         if (index === currentPlayer) {
           return {
             ...player,
@@ -133,29 +176,60 @@ const Game = () => {
           };
         }
         return player;
-      })
-    );
-    setCurrentPlayer((currentPlayer + 1) % players.length);
-    setCurrentThrow('');
-  };
+      });
 
-  const startGame = () => {
-    setGameStarted(true);
+      // Update turn start score for the next player using the correct state
+      const nextPlayer = (currentPlayer + 1) % players.length;
+      setCurrentPlayer(nextPlayer);
+      setTurnStartScores((prev) => {
+        const newScores = [...prev];
+        newScores[nextPlayer] = updatedPlayers[nextPlayer].score;
+        return newScores;
+      });
+
+      return updatedPlayers;
+    });
+    setCurrentThrow('');
   };
 
   const resetGame = () => {
     setPlayers((prevPlayers) =>
       prevPlayers.map((player) => ({
         ...player,
-        score: 501,
+        score: gameType,
         throws: [],
         legs: 0,
         allThrows: [],
       }))
     );
     setCurrentPlayer(0);
+    setTurnStartScores([gameType, gameType]);
     setCurrentThrow('');
     setGameStarted(false);
+    setMatchCompleted(false);
+    setMatchWinner(null);
+  };
+
+  const handleNewGame = () => {
+    resetGame();
+  };
+
+  const handleRematch = () => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) => ({
+        ...player,
+        score: gameType,
+        throws: [],
+        legs: 0,
+        allThrows: [],
+      }))
+    );
+    setCurrentPlayer(0);
+    setTurnStartScores([gameType, gameType]);
+    setCurrentThrow('');
+    setMatchCompleted(false);
+    setMatchWinner(null);
+    // Keep gameStarted as true for rematch
   };
 
   const handleBackClick = () => {
@@ -165,8 +239,9 @@ const Game = () => {
   const calculateAverage = (throws) => {
     if (throws.length === 0) return 0;
     const sum = throws.reduce((acc, val) => acc + val, 0);
-    const dartsThrown = throws.length * 3; // Each throw entry represents 3 darts
-    return ((sum / dartsThrown) * 3).toFixed(1); // Average per 3 darts
+    // Use more realistic dart count estimation (2.7 darts per throw on average)
+    const estimatedDarts = throws.length * 2.7;
+    return ((sum / estimatedDarts) * 3).toFixed(1); // Average per 3 darts
   };
 
   const isValidDoubleOut = (throwValue, currentScore) => {
@@ -226,45 +301,37 @@ const Game = () => {
 
       // Switch back to the player who threw last
       setCurrentPlayer(lastPlayerIndex);
+      // Update turn start score for the player we switched back to
+      setTurnStartScores((prev) => {
+        const newScores = [...prev];
+        newScores[lastPlayerIndex] =
+          players[lastPlayerIndex].score +
+          players[lastPlayerIndex].throws[
+            players[lastPlayerIndex].throws.length - 1
+          ];
+        return newScores;
+      });
     }
   };
 
   if (!gameStarted) {
+    return <GameSetup onStartGame={handleStartGame} />;
+  }
+
+  if (matchCompleted) {
+    const matchData = {
+      gameType,
+      bestOf,
+      players,
+      winner: matchWinner,
+    };
+
     return (
-      <>
-        <Notification
-          message={notification.message}
-          type={notification.type}
-          isVisible={notification.isVisible}
-          onClose={hideNotification}
-        />
-        <div className="game">
-          <div className="game-setup">
-            <h2>Setup New Game</h2>
-            <div className="players-setup">
-              {players.map((player, index) => (
-                <div key={player.id} className="player-setup">
-                  <label>
-                    Player {index + 1} Name:
-                    <input
-                      type="text"
-                      value={player.name}
-                      onChange={(e) => {
-                        const newPlayers = [...players];
-                        newPlayers[index].name = e.target.value;
-                        setPlayers(newPlayers);
-                      }}
-                    />
-                  </label>
-                </div>
-              ))}
-            </div>
-            <button className="btn btn-primary" onClick={startGame}>
-              Start Game
-            </button>
-          </div>
-        </div>
-      </>
+      <MatchReport
+        matchData={matchData}
+        onNewGame={handleNewGame}
+        onRematch={handleRematch}
+      />
     );
   }
 
@@ -282,7 +349,9 @@ const Game = () => {
           <button className="back-btn" onClick={handleBackClick}>
             ←
           </button>
-          <h1 className="match-title">BEST OF {bestOf}</h1>
+          <h1 className="match-title">
+            {gameType} - BEST OF {bestOf}
+          </h1>
           <div className="match-actions">
             <button className="reset-btn" onClick={resetGame}>
               ⋯
@@ -331,6 +400,13 @@ const Game = () => {
                 {calculateAverage(players[0].throws)}
               </span>
             </div>
+            {/* Checkout Hint for Player 1 */}
+            {currentPlayer === 0 &&
+              shouldShowCheckoutHint(turnStartScores[0]) && (
+                <div className="player-checkout-hint">
+                  <CheckoutHint score={turnStartScores[0]} />
+                </div>
+              )}
           </div>
 
           <div className="center-divider"></div>
@@ -347,6 +423,13 @@ const Game = () => {
                 {calculateAverage(players[1].throws)}
               </span>
             </div>
+            {/* Checkout Hint for Player 2 */}
+            {currentPlayer === 1 &&
+              shouldShowCheckoutHint(turnStartScores[1]) && (
+                <div className="player-checkout-hint">
+                  <CheckoutHint score={turnStartScores[1]} />
+                </div>
+              )}
           </div>
         </div>
 
