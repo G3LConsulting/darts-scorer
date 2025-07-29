@@ -28,7 +28,7 @@ A mobile-first Progressive Web App (PWA) for tracking darts games with WordPress
 ### Frontend Setup
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/darts-scorer.git
+git clone https://github.com/G3LConsulting/darts-scorer.git
 cd darts-scorer
 
 # Install dependencies
@@ -99,7 +99,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🐛 Issues & Support
 
-Please report issues on the [GitHub Issues](https://github.com/YOUR_USERNAME/darts-501-scorer/issues) page.
+Please report issues on the [GitHub Issues](https://github.com/G3LConsulting/darts-scorer/issues) page.
 
 ## 🗺️ Roadmap
 
