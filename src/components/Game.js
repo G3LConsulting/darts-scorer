@@ -5,6 +5,8 @@ import NumPad from './NumPad';
 import Notification from './Notification';
 import GameSetup from './GameSetup';
 import MatchReport from './MatchReport';
+import CheckoutHint from './CheckoutHint';
+import { shouldShowCheckoutHint } from '../utils/checkoutData';
 
 const Game = () => {
   const navigate = useNavigate();
@@ -380,6 +382,13 @@ const Game = () => {
             </div>
           </div>
         </div>
+
+        {/* Checkout Hint Section */}
+        {shouldShowCheckoutHint(players[currentPlayer].score) && (
+          <div className="checkout-hint-section">
+            <CheckoutHint score={players[currentPlayer].score} />
+          </div>
+        )}
 
         {/* Bottom Half - Input and NumPad */}
         <div className="bottom-half">
