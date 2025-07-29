@@ -6,9 +6,24 @@ import Notification from './Notification';
 
 const Game = () => {
   const navigate = useNavigate();
+  const [gameType, setGameType] = useState(501);
   const [players, setPlayers] = useState([
-    { id: 1, name: 'Player 1', score: 501, throws: [], legs: 0, allThrows: [] },
-    { id: 2, name: 'Player 2', score: 501, throws: [], legs: 0, allThrows: [] },
+    {
+      id: 1,
+      name: 'Player 1',
+      score: gameType,
+      throws: [],
+      legs: 0,
+      allThrows: [],
+    },
+    {
+      id: 2,
+      name: 'Player 2',
+      score: gameType,
+      throws: [],
+      legs: 0,
+      allThrows: [],
+    },
   ]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [currentThrow, setCurrentThrow] = useState('');
@@ -26,6 +41,17 @@ const Game = () => {
       type,
       isVisible: true,
     });
+  };
+
+  const handleGameTypeChange = (newGameType) => {
+    setGameType(newGameType);
+    // Update players' scores to match new game type
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) => ({
+        ...player,
+        score: newGameType,
+      }))
+    );
   };
 
   const hideNotification = () => {
@@ -108,7 +134,7 @@ const Game = () => {
             setPlayers((prevPlayers) =>
               prevPlayers.map((p) => ({
                 ...p,
-                score: 501,
+                score: gameType,
                 throws: [],
               }))
             );
@@ -147,7 +173,7 @@ const Game = () => {
     setPlayers((prevPlayers) =>
       prevPlayers.map((player) => ({
         ...player,
-        score: 501,
+        score: gameType,
         throws: [],
         legs: 0,
         allThrows: [],
@@ -259,6 +285,55 @@ const Game = () => {
                 </div>
               ))}
             </div>
+            <div className="game-settings-setup">
+              <div className="game-type-setup">
+                <label>
+                  Game Type:
+                  <select
+                    value={gameType}
+                    onChange={(e) =>
+                      handleGameTypeChange(parseInt(e.target.value))
+                    }
+                    className="game-type-select"
+                  >
+                    <option value={101}>101</option>
+                    <option value={201}>201</option>
+                    <option value={301}>301</option>
+                    <option value={401}>401</option>
+                    <option value={501}>501</option>
+                    <option value={601}>601</option>
+                    <option value={701}>701</option>
+                    <option value={801}>801</option>
+                    <option value={901}>901</option>
+                    <option value={1001}>1001</option>
+                  </select>
+                </label>
+                <div className="game-type-info">
+                  Each player starts with {gameType} points
+                </div>
+              </div>
+
+              <div className="match-format-setup">
+                <label>
+                  Match Format:
+                  <select
+                    value={bestOf}
+                    onChange={(e) => setBestOf(parseInt(e.target.value))}
+                    className="match-format-select"
+                  >
+                    <option value={1}>Best of 1</option>
+                    <option value={3}>Best of 3</option>
+                    <option value={5}>Best of 5</option>
+                    <option value={7}>Best of 7</option>
+                    <option value={9}>Best of 9</option>
+                    <option value={11}>Best of 11</option>
+                  </select>
+                </label>
+                <div className="match-format-info">
+                  First to {Math.ceil(bestOf / 2)} legs wins
+                </div>
+              </div>
+            </div>
             <button className="btn btn-primary" onClick={startGame}>
               Start Game
             </button>
@@ -282,7 +357,9 @@ const Game = () => {
           <button className="back-btn" onClick={handleBackClick}>
             ←
           </button>
-          <h1 className="match-title">BEST OF {bestOf}</h1>
+          <h1 className="match-title">
+            {gameType} - BEST OF {bestOf}
+          </h1>
           <div className="match-actions">
             <button className="reset-btn" onClick={resetGame}>
               ⋯

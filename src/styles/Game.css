@@ -49,6 +49,96 @@
   color: #333;
 }
 
+.match-format-setup {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.match-format-setup label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.match-format-select {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  min-width: 150px;
+}
+
+.match-format-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.match-format-select:hover {
+  border-color: #007bff;
+}
+
+.match-format-info {
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.game-settings-setup {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.game-type-setup {
+  text-align: center;
+}
+
+.game-type-setup label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.game-type-select {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  min-width: 120px;
+}
+
+.game-type-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.game-type-select:hover {
+  border-color: #007bff;
+}
+
+.game-type-info {
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
 .scoreboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -159,6 +249,11 @@
   .players-setup {
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .game-settings-setup {
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   .scoreboard {
