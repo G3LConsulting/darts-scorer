@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/GameProfessional.css';
 import NumPad from './NumPad';
@@ -10,6 +10,7 @@ import { shouldShowCheckoutHint } from '../utils/checkoutData';
 
 const Game = () => {
   const navigate = useNavigate();
+  const isMountedRef = useRef(true);
   const [gameType, setGameType] = useState(501);
   const [bestOf, setBestOf] = useState(3);
   const [players, setPlayers] = useState([
@@ -41,6 +42,13 @@ const Game = () => {
     type: 'info',
     isVisible: false,
   });
+
+  // Cleanup effect to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const showNotification = (message, type = 'info', duration = 3000) => {
     setNotification({
@@ -123,6 +131,7 @@ const Game = () => {
 
         if (winner.legs >= legsToWin) {
           setTimeout(() => {
+            if (!isMountedRef.current) return;
             setMatchWinner(winner);
             setMatchCompleted(true);
             showNotification(
@@ -136,6 +145,7 @@ const Game = () => {
         } else {
           // Reset for next leg
           setTimeout(() => {
+            if (!isMountedRef.current) return;
             showNotification(`${winner.name} wins the leg!`, 'success', 2000);
             setPlayers((prevPlayers) =>
               prevPlayers.map((p) => ({
@@ -155,8 +165,8 @@ const Game = () => {
     }
 
     // Valid throw - use functional update to only update the current player
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((player, index) => {
+    setPlayers((prevPlayers) => {
+      const updatedPlayers = prevPlayers.map((player, index) => {
         if (index === currentPlayer) {
           return {
             ...player,
@@ -166,15 +176,18 @@ const Game = () => {
           };
         }
         return player;
-      })
-    );
-    const nextPlayer = (currentPlayer + 1) % players.length;
-    setCurrentPlayer(nextPlayer);
-    // Update turn start score for the next player
-    setTurnStartScores((prev) => {
-      const newScores = [...prev];
-      newScores[nextPlayer] = players[nextPlayer].score;
-      return newScores;
+      });
+
+      // Update turn start score for the next player using the correct state
+      const nextPlayer = (currentPlayer + 1) % players.length;
+      setCurrentPlayer(nextPlayer);
+      setTurnStartScores((prev) => {
+        const newScores = [...prev];
+        newScores[nextPlayer] = updatedPlayers[nextPlayer].score;
+        return newScores;
+      });
+
+      return updatedPlayers;
     });
     setCurrentThrow('');
   };
@@ -226,8 +239,9 @@ const Game = () => {
   const calculateAverage = (throws) => {
     if (throws.length === 0) return 0;
     const sum = throws.reduce((acc, val) => acc + val, 0);
-    const dartsThrown = throws.length * 3; // Each throw entry represents 3 darts
-    return ((sum / dartsThrown) * 3).toFixed(1); // Average per 3 darts
+    // Use more realistic dart count estimation (2.7 darts per throw on average)
+    const estimatedDarts = throws.length * 2.7;
+    return ((sum / estimatedDarts) * 3).toFixed(1); // Average per 3 darts
   };
 
   const isValidDoubleOut = (throwValue, currentScore) => {

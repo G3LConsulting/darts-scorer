@@ -7,6 +7,15 @@ import {
 import '../styles/GameProfessional.css';
 
 const CheckoutHint = ({ score }) => {
+  // Input validation
+  if (score === null || score === undefined || typeof score !== 'number') {
+    return null;
+  }
+
+  if (score < 2 || score > 170 || !Number.isInteger(score)) {
+    return null;
+  }
+
   const checkoutInfo = getCheckoutInfo(score);
 
   if (!checkoutInfo || !isFinishable(score)) {

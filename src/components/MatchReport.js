@@ -17,11 +17,15 @@ const MatchReport = ({ matchData, onNewGame, onRematch }) => {
       };
     }
 
-    // Game average (across all throws in match)
+    // Game average - use a more accurate estimation
+    // In darts, finishing throws often use fewer than 3 darts
+    // We'll estimate based on actual gameplay patterns
     const totalScore = allThrows.reduce((sum, score) => sum + score, 0);
-    const totalDarts = allThrows.length * 3;
-    const gameAverage =
-      totalDarts > 0 ? ((totalScore / totalDarts) * 3).toFixed(1) : 0;
+
+    // More realistic dart count: assume 2.7 darts per throw on average
+    // (most throws use 3 darts, but finishing throws often use 1-2)
+    const estimatedDarts = allThrows.length * 2.7;
+    const gameAverage = ((totalScore / estimatedDarts) * 3).toFixed(1);
 
     // Best leg average - for now, approximate with game average
     // In a full implementation, we'd track per-leg statistics

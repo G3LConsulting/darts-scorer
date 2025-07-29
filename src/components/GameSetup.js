@@ -141,11 +141,17 @@ const GameSetup = ({ onStartGame }) => {
                     value={player.name}
                     onChange={(e) => {
                       const newPlayers = [...players];
-                      newPlayers[index].name = e.target.value;
+                      // Sanitize input: remove HTML tags and limit length
+                      const sanitizedName = e.target.value
+                        .replace(/<[^>]*>/g, '') // Remove HTML tags
+                        .replace(/[<>]/g, '') // Remove remaining < > characters
+                        .slice(0, 20); // Limit to 20 characters
+                      newPlayers[index].name = sanitizedName;
                       setPlayers(newPlayers);
                     }}
                     className="setup-input"
                     placeholder={`Player ${index + 1}`}
+                    maxLength="20"
                   />
                 </div>
               ))}
