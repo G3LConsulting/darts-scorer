@@ -1,0 +1,534 @@
+/* Professional Dark Theme Game Layout */
+.game-container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #2a2d5a 0%, #1a1d3a 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Match Header */
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.match-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.match-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.reset-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* Players Header */
+.players-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.player-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.player-header.active {
+  opacity: 1;
+}
+
+.player-header:first-child {
+  flex-direction: row;
+}
+
+.player-header:last-child {
+  flex-direction: row-reverse;
+}
+
+.player-indicator {
+  color: #ff6b6b;
+  font-size: 12px;
+}
+
+.player-header.active .player-indicator {
+  color: #4ecdc4;
+}
+
+.player-name {
+  font-weight: 600;
+  color: white;
+}
+
+.legs-won {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+/* Legs Display */
+.legs-display {
+  text-align: center;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.legs-label {
+  font-size: 12px;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+}
+
+.legs-scores {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.leg-score {
+  background: #4a4d7a;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Main Scoreboard */
+.main-scoreboard {
+  display: flex;
+  flex: 1;
+  min-height: 200px;
+  position: relative;
+}
+
+.player-score-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.player-score-section.active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.main-score {
+  font-size: 120px;
+  font-weight: 300;
+  color: white;
+  line-height: 1;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.score-info {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+.center-divider {
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+}
+
+/* Bottom Half Container */
+.bottom-half {
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Score Input Area */
+.score-input-area {
+  padding: 8px;
+  flex-shrink: 0;
+}
+
+.input-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.score-input-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.score-display {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  width: 150px;
+  flex: 0 0 auto;
+}
+
+.score-display:focus {
+  outline: none;
+  border-color: #4ecdc4;
+  box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.2);
+}
+
+.score-display::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: normal;
+}
+
+.undo-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 24px;
+  padding: 16px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 0 0 auto;
+}
+
+.undo-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.undo-btn:active {
+  transform: translateY(0);
+}
+
+.undo-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.undo-btn:disabled:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: none;
+}
+
+/* Professional NumPad */
+.game-numpad {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  padding: 12px;
+}
+
+.numpad-professional {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.numpad-grid-pro {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.numpad-btn-pro {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+  font-size: 36px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.numpad-btn-pro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.numpad-btn-pro:active {
+  transform: translateY(0);
+}
+
+.numpad-number-pro {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.numpad-number-pro:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.numpad-clear-pro {
+  background: #e74c3c;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.numpad-clear-pro:hover {
+  background: #c0392b;
+}
+
+.numpad-submit-pro {
+  background: #27ae60;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.numpad-submit-pro:hover {
+  background: #229954;
+}
+
+.numpad-submit-pro:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.numpad-submit-pro:disabled:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .game-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .match-header {
+    padding: 8px 15px;
+    flex-shrink: 0;
+  }
+
+  .match-title {
+    font-size: 14px;
+  }
+
+  .players-header {
+    padding: 10px 15px;
+    flex-shrink: 0;
+  }
+
+  .player-header {
+    font-size: 12px;
+  }
+
+  .legs-display {
+    padding: 8px;
+    flex-shrink: 0;
+  }
+
+  .legs-scores {
+    gap: 20px;
+  }
+
+  .leg-score {
+    padding: 6px 12px;
+    font-size: 16px;
+  }
+
+  .main-scoreboard {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .bottom-half {
+    height: 50vh;
+  }
+
+  .player-score-section {
+    padding: 15px 10px;
+  }
+
+  .main-score {
+    font-size: 64px;
+    margin-bottom: 8px;
+  }
+
+  .score-info {
+    font-size: 12px;
+  }
+
+  .score-input-area {
+    padding: 6px;
+    flex-shrink: 0;
+  }
+
+  .score-display {
+    font-size: 22px;
+    padding: 12px 16px;
+    width: 120px;
+  }
+
+  .undo-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    padding: 12px;
+  }
+
+  .game-numpad {
+    padding: 10px;
+  }
+
+  .numpad-btn-pro {
+    font-size: 24px;
+  }
+
+  .numpad-grid-pro {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .match-header {
+    padding: 6px 12px;
+  }
+
+  .match-title {
+    font-size: 12px;
+  }
+
+  .players-header {
+    padding: 8px 12px;
+  }
+
+  .player-header {
+    font-size: 11px;
+  }
+
+  .legs-display {
+    padding: 6px;
+  }
+
+  .legs-scores {
+    gap: 15px;
+  }
+
+  .leg-score {
+    padding: 4px 10px;
+    font-size: 14px;
+  }
+
+  .player-score-section {
+    padding: 10px 8px;
+  }
+
+  .main-score {
+    font-size: 52px;
+    margin-bottom: 5px;
+  }
+
+  .score-info {
+    font-size: 10px;
+  }
+
+  .score-input-area {
+    padding: 4px;
+  }
+
+  .score-display {
+    font-size: 18px;
+    padding: 10px 12px;
+    width: 100px;
+  }
+
+  .undo-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  .game-numpad {
+    padding: 8px;
+  }
+
+  .numpad-btn-pro {
+    font-size: 22px;
+  }
+
+  .numpad-grid-pro {
+    gap: 10px;
+  }
+}

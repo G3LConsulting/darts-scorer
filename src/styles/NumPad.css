@@ -1,0 +1,183 @@
+.numpad {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 350px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.numpad-display {
+  margin-bottom: 1rem;
+}
+
+.numpad-input {
+  width: 100%;
+  max-width: 100%;
+  padding: 16px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  border: 3px solid #007bff;
+  border-radius: 12px;
+  background: #f8f9fa;
+  color: #333;
+}
+
+.numpad-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.numpad-btn {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 12px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  user-select: none;
+}
+
+.numpad-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.numpad-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.numpad-number {
+  background: #f8f9fa;
+  color: #333;
+  border: 2px solid #dee2e6;
+}
+
+.numpad-number:hover {
+  background: #e9ecef;
+  border-color: #007bff;
+}
+
+.numpad-clear {
+  background: #dc3545;
+  color: white;
+  font-size: 18px;
+}
+
+.numpad-clear:hover {
+  background: #c82333;
+}
+
+.numpad-backspace {
+  background: #6c757d;
+  color: white;
+  font-size: 20px;
+}
+
+.numpad-backspace:hover {
+  background: #545b62;
+}
+
+.numpad-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.numpad-submit {
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 12px;
+}
+
+.numpad-submit:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.numpad-submit:disabled:hover {
+  background: #6c757d;
+  transform: none;
+  box-shadow: none;
+}
+
+.numpad-info {
+  text-align: center;
+  min-height: 20px;
+}
+
+.numpad-info .error {
+  color: #dc3545;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.numpad-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .numpad {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .numpad-btn {
+    min-height: 50px;
+    font-size: 20px;
+  }
+
+  .numpad-input {
+    font-size: 20px;
+    padding: 12px;
+  }
+
+  .numpad-submit {
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .numpad {
+    padding: 0.75rem;
+  }
+
+  .numpad-grid {
+    gap: 8px;
+  }
+
+  .numpad-btn {
+    min-height: 45px;
+    font-size: 18px;
+  }
+
+  .numpad-input {
+    font-size: 18px;
+    padding: 10px;
+  }
+}
