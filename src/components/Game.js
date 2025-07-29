@@ -39,6 +39,12 @@ const Game = () => {
     const newScore = player.score - throwValue;
 
     if (newScore === 0) {
+      // Check if it's a valid double out finish
+      if (!isValidDoubleOut(throwValue, player.score)) {
+        alert('You must finish with a double! Try again.');
+        return;
+      }
+
       // Winner of the leg!
       player.score = newScore;
       player.throws.push(throwValue);
@@ -116,6 +122,33 @@ const Game = () => {
     const sum = throws.reduce((acc, val) => acc + val, 0);
     const dartsThrown = Math.ceil(throws.length / 3) * 3; // Each turn is 3 darts
     return ((sum / dartsThrown) * 3).toFixed(1);
+  };
+
+  const isValidDoubleOut = (throwValue, currentScore) => {
+    // Validate double out finish according to darts rules
+    // throwValue is the total score being entered for this turn
+    // currentScore is the remaining score before this throw
+
+    // Must equal the remaining score to finish
+    if (throwValue !== currentScore) {
+      return false;
+    }
+
+    // Rule 1: If score is 50 or below, it must be even (finishable with a double)
+    if (currentScore <= 50) {
+      return currentScore % 2 === 0 && currentScore >= 2;
+    }
+
+    // Rule 2: If score is above 50, it must be 170 or less (max possible finish)
+    // and should be theoretically finishable with a double out
+    if (currentScore <= 170) {
+      // For simplicity, we'll allow any score that could theoretically be finished
+      // A more complete implementation would check all valid finish combinations
+      return true;
+    }
+
+    // Scores above 170 cannot be finished in one turn
+    return false;
   };
 
   const handleUndoLastThrow = () => {
