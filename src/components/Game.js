@@ -165,8 +165,8 @@ const Game = () => {
   const calculateAverage = (throws) => {
     if (throws.length === 0) return 0;
     const sum = throws.reduce((acc, val) => acc + val, 0);
-    const dartsThrown = Math.ceil(throws.length / 3) * 3; // Each turn is 3 darts
-    return ((sum / dartsThrown) * 3).toFixed(1);
+    const dartsThrown = throws.length * 3; // Each throw entry represents 3 darts
+    return ((sum / dartsThrown) * 3).toFixed(1); // Average per 3 darts
   };
 
   const isValidDoubleOut = (throwValue, currentScore) => {
