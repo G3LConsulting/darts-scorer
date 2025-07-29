@@ -986,180 +986,64 @@
   }
 }
 
-/* Checkout Hint Styles - Professional Dark Theme */
-.checkout-hint-section {
-  padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* Player-specific Checkout Hint Styles */
+.player-checkout-hint {
+  margin-top: 8px;
 }
 
-.checkout-hint {
-  background: rgba(76, 175, 80, 0.1);
-  border: 1px solid rgba(76, 175, 80, 0.3);
-  border-radius: 8px;
-  padding: 16px;
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.checkout-hint-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(76, 175, 80, 0.2);
-}
-
-.checkout-hint-title {
-  color: #4CAF50;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.checkout-hint-darts {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 12px;
-  font-weight: 600;
-  background: rgba(76, 175, 80, 0.2);
-  padding: 4px 8px;
-  border-radius: 12px;
-  text-transform: uppercase;
-}
-
-.checkout-combinations {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.checkout-primary,
-.checkout-alternative {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.checkout-label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  min-width: 50px;
-}
-
-.checkout-combo {
-  color: #4CAF50;
-  font-size: 16px;
-  font-weight: 700;
-  font-family: 'Courier New', monospace;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid rgba(76, 175, 80, 0.2);
-  flex: 1;
+.checkout-text {
   text-align: center;
 }
 
-.checkout-alternatives {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 4px;
+.checkout-primary-text {
+  color: #4CAF50;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 4px;
 }
 
-.checkout-alternative .checkout-combo {
-  background: rgba(0, 0, 0, 0.1);
-  border-color: rgba(76, 175, 80, 0.15);
-  color: rgba(76, 175, 80, 0.8);
+.checkout-alt-text {
+  color: rgba(76, 175, 80, 0.7);
   font-size: 14px;
-}
-
-.checkout-note {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  padding: 8px 12px;
-  background: rgba(255, 193, 7, 0.1);
-  border: 1px solid rgba(255, 193, 7, 0.3);
-  border-radius: 6px;
-}
-
-.checkout-note-icon {
-  font-size: 16px;
-}
-
-.checkout-note-text {
-  color: #FFC107;
-  font-size: 12px;
   font-weight: 600;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 4px;
+}
+
+.checkout-double-reminder {
+  color: #FFC107;
+  font-size: 10px;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 /* Mobile Responsiveness for Checkout Hints */
 @media (max-width: 768px) {
-  .checkout-hint-section {
-    padding: 8px 15px;
-  }
-
-  .checkout-hint {
-    padding: 12px;
-  }
-
-  .checkout-hint-header {
-    margin-bottom: 10px;
-  }
-
-  .checkout-hint-title {
-    font-size: 12px;
-  }
-
-  .checkout-hint-darts {
-    font-size: 10px;
-    padding: 3px 6px;
-  }
-
-  .checkout-combo {
+  .checkout-primary-text {
     font-size: 14px;
-    padding: 4px 8px;
   }
 
-  .checkout-alternative .checkout-combo {
+  .checkout-alt-text {
     font-size: 12px;
   }
 
-  .checkout-primary,
-  .checkout-alternative {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
+  .checkout-double-reminder {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-primary-text {
+    font-size: 12px;
   }
 
-  .checkout-label {
-    font-size: 10px;
-    min-width: auto;
-  }
-
-  .checkout-note {
-    padding: 6px 10px;
-  }
-
-  .checkout-note-text {
+  .checkout-alt-text {
     font-size: 11px;
+  }
+
+  .checkout-double-reminder {
+    font-size: 8px;
   }
 }

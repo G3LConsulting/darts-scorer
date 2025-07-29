@@ -434,11 +434,11 @@ export const formatCheckout = (combination) => {
   }
 
   return combination
-    .replace(/T(\d+)/g, '3×$1') // T20 → 3×20
-    .replace(/D(\d+)/g, '2×$1') // D20 → 2×20
+    .replace(/T(\d+)/g, 'T$1') // T20 → T20
+    .replace(/D(\d+)/g, 'D$1') // D20 → D20
     .replace(/S(\d+)/g, '$1') // S20 → 20
     .replace(/Bull/g, 'Bull') // Bull stays Bull
-    .replace(/-/g, ' → '); // - becomes →
+    .replace(/-/g, ' ➤ '); // - becomes ➤ (more obvious arrow)
 };
 
 export default checkoutData;

@@ -32,6 +32,7 @@ const Game = () => {
   ]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [currentThrow, setCurrentThrow] = useState('');
+  const [turnStartScores, setTurnStartScores] = useState([501, 501]);
   const [gameStarted, setGameStarted] = useState(false);
   const [matchCompleted, setMatchCompleted] = useState(false);
   const [matchWinner, setMatchWinner] = useState(null);
@@ -53,6 +54,7 @@ const Game = () => {
     setGameType(gameConfig.gameType);
     setBestOf(gameConfig.bestOf);
     setPlayers(gameConfig.players);
+    setTurnStartScores([gameConfig.gameType, gameConfig.gameType]);
     setGameStarted(true);
   };
 
@@ -142,6 +144,7 @@ const Game = () => {
                 throws: [],
               }))
             );
+            setTurnStartScores([gameType, gameType]);
             setCurrentThrow('');
           }, 100);
         }
@@ -165,7 +168,14 @@ const Game = () => {
         return player;
       })
     );
-    setCurrentPlayer((currentPlayer + 1) % players.length);
+    const nextPlayer = (currentPlayer + 1) % players.length;
+    setCurrentPlayer(nextPlayer);
+    // Update turn start score for the next player
+    setTurnStartScores((prev) => {
+      const newScores = [...prev];
+      newScores[nextPlayer] = players[nextPlayer].score;
+      return newScores;
+    });
     setCurrentThrow('');
   };
 
@@ -180,6 +190,7 @@ const Game = () => {
       }))
     );
     setCurrentPlayer(0);
+    setTurnStartScores([gameType, gameType]);
     setCurrentThrow('');
     setGameStarted(false);
     setMatchCompleted(false);
@@ -201,6 +212,7 @@ const Game = () => {
       }))
     );
     setCurrentPlayer(0);
+    setTurnStartScores([gameType, gameType]);
     setCurrentThrow('');
     setMatchCompleted(false);
     setMatchWinner(null);
@@ -275,6 +287,16 @@ const Game = () => {
 
       // Switch back to the player who threw last
       setCurrentPlayer(lastPlayerIndex);
+      // Update turn start score for the player we switched back to
+      setTurnStartScores((prev) => {
+        const newScores = [...prev];
+        newScores[lastPlayerIndex] =
+          players[lastPlayerIndex].score +
+          players[lastPlayerIndex].throws[
+            players[lastPlayerIndex].throws.length - 1
+          ];
+        return newScores;
+      });
     }
   };
 
@@ -364,6 +386,13 @@ const Game = () => {
                 {calculateAverage(players[0].throws)}
               </span>
             </div>
+            {/* Checkout Hint for Player 1 */}
+            {currentPlayer === 0 &&
+              shouldShowCheckoutHint(turnStartScores[0]) && (
+                <div className="player-checkout-hint">
+                  <CheckoutHint score={turnStartScores[0]} />
+                </div>
+              )}
           </div>
 
           <div className="center-divider"></div>
@@ -380,15 +409,15 @@ const Game = () => {
                 {calculateAverage(players[1].throws)}
               </span>
             </div>
+            {/* Checkout Hint for Player 2 */}
+            {currentPlayer === 1 &&
+              shouldShowCheckoutHint(turnStartScores[1]) && (
+                <div className="player-checkout-hint">
+                  <CheckoutHint score={turnStartScores[1]} />
+                </div>
+              )}
           </div>
         </div>
-
-        {/* Checkout Hint Section */}
-        {shouldShowCheckoutHint(players[currentPlayer].score) && (
-          <div className="checkout-hint-section">
-            <CheckoutHint score={players[currentPlayer].score} />
-          </div>
-        )}
 
         {/* Bottom Half - Input and NumPad */}
         <div className="bottom-half">
