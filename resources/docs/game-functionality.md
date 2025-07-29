@@ -1,7 +1,7 @@
 # Darts Scorer - Game Functionality Documentation
 
 ## Overview
-The Darts Scorer is a Progressive Web App (PWA) designed for tracking 501 darts games with a professional, mobile-first interface. The application provides real-time score tracking, average calculations, and match management.
+The Darts Scorer is a Progressive Web App (PWA) designed for tracking 501 darts games with a professional, mobile-first interface. The application provides real-time score tracking, average calculations, match management, and modern UI notifications for enhanced user experience.
 
 ## Game Rules & Mechanics
 
@@ -9,8 +9,10 @@ The Darts Scorer is a Progressive Web App (PWA) designed for tracking 501 darts 
 - Each player starts with 501 points
 - Players take turns subtracting their throw scores from their remaining points
 - First player to reach exactly 0 points wins the leg
-- Standard "double out" rule: cannot finish on 1 point
+- **Double out rule**: Must finish with a double (D1-D20 or Bull)
+- **Bust protection**: Throws that would result in scores below 2 are invalid
 - Maximum possible single throw: 180 points
+- Maximum finishable score in one turn: 170 points
 
 ### Match Structure
 - Best of N format (default: Best of 3)
@@ -25,8 +27,10 @@ The Darts Scorer is a Progressive Web App (PWA) designed for tracking 501 darts 
   - Prevents negative scores
   - Enforces maximum 180 points per throw
   - Prevents throws exceeding remaining player score
-  - Blocks finishing on 1 point (double out rule)
+  - **Bust detection**: Blocks throws that would result in scores below 2
+  - **Double out validation**: Ensures finishing throws are valid doubles
 - **Visual Feedback**: Active player highlighting, button hover effects
+- **UI Notifications**: Modern notification system replaces alert boxes
 
 ### Score Tracking & Display
 - **Main Scoreboard**: Large score display for both players (501 format)
@@ -39,8 +43,8 @@ The app tracks two types of averages for each player:
 
 #### Game Average (wg)
 - Tracks all throws across all legs in the current match
-- Formula: `(sum of all throws / total darts thrown) * 3`
-- Assumes 3 darts per turn for accurate averaging
+- Formula: `(sum of all throws / (throws.length * 3)) * 3`
+- Each score entry represents exactly 3 darts thrown
 - Displayed next to "wg:" label
 
 #### Leg Average (lg)
@@ -48,6 +52,8 @@ The app tracks two types of averages for each player:
 - Same calculation formula as game average
 - Resets at the start of each new leg
 - Displayed next to "lg:" label
+
+**Corrected Average Logic**: Each throw entry represents 3 darts, so total darts = throws.length × 3
 
 ### Game Controls
 
@@ -79,11 +85,15 @@ The app tracks two types of averages for each player:
 5. Process repeats until leg completion
 
 #### Leg Completion
-- Triggered when player reaches exactly 0 points
-- Winner announcement with leg count
+- Triggered when player reaches exactly 0 points with valid double out
+- **UI notification**: Smooth notification instead of alert box
 - Automatic reset to 501 for next leg
 - Leg averages reset, game averages maintained
 - Match winner determined when required legs are won
+
+#### Match Completion
+- **Trophy notification**: Golden notification for match winner
+- Final score display with extended notification duration
 
 ## User Interface
 
@@ -99,6 +109,7 @@ The app tracks two types of averages for each player:
 - **Responsive Design**: Mobile-first with tablet/desktop support
 - **Visual Hierarchy**: Clear focus on current scores and active player
 - **Accessibility**: High contrast, large touch targets, clear typography
+- **Modern Notifications**: Slide-in notifications with backdrop blur effects
 
 ### Mobile Optimization
 - **Viewport Sizing**: Uses vh/vw units for consistent mobile display
@@ -110,9 +121,11 @@ The app tracks two types of averages for each player:
 
 ### State Management
 - React hooks for local state management
+- **Optimized updates**: Functional state updates prevent unnecessary rerenders
 - Player objects containing: score, throws (leg), allThrows (game), legs won
 - Current player tracking and turn management
 - Game phase management (setup vs. active game)
+- **Notification state**: Manages UI notification visibility and content
 
 ### Data Structure
 ```javascript
@@ -129,16 +142,45 @@ players: [
 ```
 
 ### Key Functions
-- `handleThrowSubmit()`: Validates and processes throw scores
-- `calculateAverage()`: Computes 3-dart averages
-- `handleUndoLastThrow()`: Reverses last throw action
+- `handleThrowSubmit()`: Validates and processes throw scores with comprehensive validation
+- `calculateAverage()`: Computes accurate 3-dart averages (corrected formula)
+- `handleUndoLastThrow()`: Reverses last throw action with optimized state updates
 - `resetGame()`: Resets match to initial state
+- `isValidDoubleOut()`: Validates double out finishing requirements
+- `showNotification()`: Displays UI notifications with different types and durations
 
-## Error Handling
-- Input validation with user-friendly alerts
-- Prevention of invalid game states
-- Graceful handling of edge cases (finishing on 1, exceeding score)
-- Disabled states for unavailable actions (undo when no throws)
+## Error Handling & User Feedback
+
+### Validation System
+- **Input validation**: Comprehensive score validation with immediate feedback
+- **Bust detection**: Prevents invalid throws that would result in unfinishable scores
+- **Double out enforcement**: Validates finishing throws meet double out requirements
+- **State protection**: Prevents impossible game states and invalid transitions
+
+### UI Notification System
+- **Modern notifications**: Replaces jarring alert boxes with smooth UI notifications
+- **Notification types**:
+  - 🎯 **Success** (green): Leg wins, valid actions
+  - 🏆 **Trophy** (gold): Match wins with extended duration
+  - ⚠️ **Error** (red): Invalid inputs, rule violations
+  - 💥 **Bust** (purple): Bust scenarios with explanation
+  - ℹ️ **Info** (blue): General information messages
+- **Auto-dismiss**: Configurable duration with manual close option
+- **Professional styling**: Backdrop blur, slide animations, mobile-responsive
+
+## Performance Optimizations
+- **Functional state updates**: Prevents unnecessary component rerenders
+- **Optimized array handling**: Eliminates array recreation on every state change
+- **Efficient validation**: Early return patterns prevent unnecessary processing
+- **Component memoization**: Strategic use of React optimization patterns
+
+## Recent Updates & Improvements
+- ✅ **Double out validation**: Proper enforcement of 501 double out rules
+- ✅ **Bust protection**: Comprehensive validation preventing invalid game states
+- ✅ **UI notifications**: Modern notification system replacing alert boxes
+- ✅ **Average calculation fix**: Corrected formula accounting for 3 darts per turn
+- ✅ **Performance optimization**: Functional state updates preventing unnecessary rerenders
+- ✅ **Enhanced validation**: Multi-layer validation system for robust gameplay
 
 ## Future Enhancement Possibilities
 - Multiple game formats (301, Cricket, etc.)
@@ -146,3 +188,5 @@ players: [
 - Player profiles and historical data
 - Online multiplayer capabilities
 - Tournament bracket management
+- Sound effects and haptic feedback
+- Advanced statistics and analytics dashboard
