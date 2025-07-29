@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/GameProfessional.css';
 import NumPad from './NumPad';
 import Notification from './Notification';
+import GameSetup from './GameSetup';
+import MatchReport from './MatchReport';
 
 const Game = () => {
   const navigate = useNavigate();
   const [gameType, setGameType] = useState(501);
+  const [bestOf, setBestOf] = useState(3);
   const [players, setPlayers] = useState([
     {
       id: 1,
       name: 'Player 1',
-      score: gameType,
+      score: 501,
       throws: [],
       legs: 0,
       allThrows: [],
@@ -19,7 +22,7 @@ const Game = () => {
     {
       id: 2,
       name: 'Player 2',
-      score: gameType,
+      score: 501,
       throws: [],
       legs: 0,
       allThrows: [],
@@ -28,7 +31,8 @@ const Game = () => {
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [currentThrow, setCurrentThrow] = useState('');
   const [gameStarted, setGameStarted] = useState(false);
-  const [bestOf, setBestOf] = useState(3);
+  const [matchCompleted, setMatchCompleted] = useState(false);
+  const [matchWinner, setMatchWinner] = useState(null);
   const [notification, setNotification] = useState({
     message: '',
     type: 'info',
@@ -43,15 +47,11 @@ const Game = () => {
     });
   };
 
-  const handleGameTypeChange = (newGameType) => {
-    setGameType(newGameType);
-    // Update players' scores to match new game type
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((player) => ({
-        ...player,
-        score: newGameType,
-      }))
-    );
+  const handleStartGame = (gameConfig) => {
+    setGameType(gameConfig.gameType);
+    setBestOf(gameConfig.bestOf);
+    setPlayers(gameConfig.players);
+    setGameStarted(true);
   };
 
   const hideNotification = () => {
@@ -119,12 +119,14 @@ const Game = () => {
 
         if (winner.legs >= legsToWin) {
           setTimeout(() => {
+            setMatchWinner(winner);
+            setMatchCompleted(true);
             showNotification(
               `${winner.name} wins the match ${winner.legs}-${
                 updatedPlayers[1 - currentPlayer].legs
               }!`,
               'trophy',
-              5000
+              3000
             );
           }, 100);
         } else {
@@ -165,10 +167,6 @@ const Game = () => {
     setCurrentThrow('');
   };
 
-  const startGame = () => {
-    setGameStarted(true);
-  };
-
   const resetGame = () => {
     setPlayers((prevPlayers) =>
       prevPlayers.map((player) => ({
@@ -182,6 +180,29 @@ const Game = () => {
     setCurrentPlayer(0);
     setCurrentThrow('');
     setGameStarted(false);
+    setMatchCompleted(false);
+    setMatchWinner(null);
+  };
+
+  const handleNewGame = () => {
+    resetGame();
+  };
+
+  const handleRematch = () => {
+    setPlayers((prevPlayers) =>
+      prevPlayers.map((player) => ({
+        ...player,
+        score: gameType,
+        throws: [],
+        legs: 0,
+        allThrows: [],
+      }))
+    );
+    setCurrentPlayer(0);
+    setCurrentThrow('');
+    setMatchCompleted(false);
+    setMatchWinner(null);
+    // Keep gameStarted as true for rematch
   };
 
   const handleBackClick = () => {
@@ -256,90 +277,23 @@ const Game = () => {
   };
 
   if (!gameStarted) {
-    return (
-      <>
-        <Notification
-          message={notification.message}
-          type={notification.type}
-          isVisible={notification.isVisible}
-          onClose={hideNotification}
-        />
-        <div className="game">
-          <div className="game-setup">
-            <h2>Setup New Game</h2>
-            <div className="players-setup">
-              {players.map((player, index) => (
-                <div key={player.id} className="player-setup">
-                  <label>
-                    Player {index + 1} Name:
-                    <input
-                      type="text"
-                      value={player.name}
-                      onChange={(e) => {
-                        const newPlayers = [...players];
-                        newPlayers[index].name = e.target.value;
-                        setPlayers(newPlayers);
-                      }}
-                    />
-                  </label>
-                </div>
-              ))}
-            </div>
-            <div className="game-settings-setup">
-              <div className="game-type-setup">
-                <label>
-                  Game Type:
-                  <select
-                    value={gameType}
-                    onChange={(e) =>
-                      handleGameTypeChange(parseInt(e.target.value))
-                    }
-                    className="game-type-select"
-                  >
-                    <option value={101}>101</option>
-                    <option value={201}>201</option>
-                    <option value={301}>301</option>
-                    <option value={401}>401</option>
-                    <option value={501}>501</option>
-                    <option value={601}>601</option>
-                    <option value={701}>701</option>
-                    <option value={801}>801</option>
-                    <option value={901}>901</option>
-                    <option value={1001}>1001</option>
-                  </select>
-                </label>
-                <div className="game-type-info">
-                  Each player starts with {gameType} points
-                </div>
-              </div>
+    return <GameSetup onStartGame={handleStartGame} />;
+  }
 
-              <div className="match-format-setup">
-                <label>
-                  Match Format:
-                  <select
-                    value={bestOf}
-                    onChange={(e) => setBestOf(parseInt(e.target.value))}
-                    className="match-format-select"
-                  >
-                    <option value={1}>Best of 1</option>
-                    <option value={3}>Best of 3</option>
-                    <option value={5}>Best of 5</option>
-                    <option value={7}>Best of 7</option>
-                    <option value={9}>Best of 9</option>
-                    <option value={11}>Best of 11</option>
-                  </select>
-                </label>
-                <div className="match-format-info">
-                  First to {Math.ceil(bestOf / 2)} legs wins
-                </div>
-              </div>
-            </div>
-            <button className="btn btn-primary" onClick={startGame}>
-              Start Game
-            </button>
-          </div>
-        </div>
-      </>
+  if (matchCompleted) {
+    const matchData = {
+      gameType,
+      bestOf,
+      players,
+      winner: matchWinner,
+    };
+
+    return (
+      <MatchReport
+        matchData={matchData}
+        onNewGame={handleNewGame}
+        onRematch={handleRematch}
+      />
     );
   }
 
