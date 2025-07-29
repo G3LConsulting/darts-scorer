@@ -1,6 +1,6 @@
-# Darts 501 Scorer
+# Darts Scorer
 
-A mobile-first Progressive Web App (PWA) for tracking 501 darts games with WordPress backend integration.
+A mobile-first Progressive Web App (PWA) for tracking darts games with WordPress backend integration.
 
 ## 🎯 Features
 
@@ -28,8 +28,8 @@ A mobile-first Progressive Web App (PWA) for tracking 501 darts games with WordP
 ### Frontend Setup
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/darts-501-scorer.git
-cd darts-501-scorer
+git clone https://github.com/YOUR_USERNAME/darts-scorer.git
+cd darts-scorer
 
 # Install dependencies
 npm install
@@ -40,7 +40,7 @@ npm start
 
 ### WordPress Plugin Setup
 1. Copy the `wordpress-plugin` folder to your WordPress `wp-content/plugins/` directory
-2. Activate the "Darts 501 Scorer" plugin in WordPress admin
+2. Activate the "Darts Scorer" plugin in WordPress admin
 3. Configure API settings in WordPress admin
 
 ## 📱 Mobile Installation
@@ -54,7 +54,7 @@ The app can be installed on mobile devices:
 
 ### Project Structure
 ```
-darts-501-scorer/
+darts-scorer/
 ├── src/                    # React frontend source
 │   ├── components/         # React components
 │   ├── hooks/             # Custom React hooks
